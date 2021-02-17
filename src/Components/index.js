@@ -22,7 +22,7 @@ export const ViewGoogleMap = React.memo(
 	}
 );
 
-viewMap.proptypes = {
+ViewGoogleMap.proptypes = {
 	lat: PropTypes.any.isRequired,
 	lng: PropTypes.any.isRequired,
 	zoom: PropTypes.number,
