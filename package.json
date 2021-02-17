@@ -1,6 +1,6 @@
 {
   "name": "react-google-autocomplete-places",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Funtional React component for google autocomplete",
   "main": "index.js",
   "scripts": {
