@@ -1,6 +1,8 @@
-import React, { forwardRef, useEffect, useRef, memo } from 'react';
+import React, { forwardRef, useEffect, useRef, memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { GoogleURl } from './constants.js';
+import { ViewGoogleMap } from './Components';
+export * from './Components';
 let autocomplete;
 let googleListner;
 export const configKey = (apiKey) => {
@@ -18,10 +20,10 @@ export const configKey = (apiKey) => {
 		return new Promise((resolve) => {
 			googleMapsScript.addEventListener('load', () => resolve());
 		});
-	};
-const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) => {
-	const currentRef = useRef(null);
-
+};
+const GoogleAutoComplete = ({ onChange, onAddressSelected, value, showMap = false, ...props, }) => {
+    const currentRef = useRef(null);
+    const [geolocation, setGeoLoaction] = useState({lat: '31.4685', lng: '76.2708'});
 	const loadScript = () => {
 		const { apiKey } = props;
         return configKey(apiKey);
@@ -95,6 +97,10 @@ const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) =
 				{ address: 'country', id: 'country' },
 			];
             const place = autocomplete.getPlace();
+            setGeoLoaction({
+                lat: place.geometry.location.lat() || 0,
+                lng: place.geometry.location.lng() || 0
+            });
             if (!filterAddress) {
                 return onAddressSelected(place);
             }
@@ -153,7 +159,8 @@ const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) =
 		};
 	}, []);
 
-	return (
+    return (
+        <React.Fragment>
 		<input
 			{...props}
 			ref={currentRef}
@@ -162,7 +169,14 @@ const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) =
 				(currentRef && currentRef.current && currentRef.current.value) || value
 			}
 			onChange={onChange}
-		/>
+            />
+            {showMap && (
+                <ViewGoogleMap
+                    zoom="14"
+                    lat={geolocation.lat}
+                    lng={geolocation.lng}
+                />)}
+            </React.Fragment>
 	);
 };
 
@@ -173,7 +187,8 @@ GoogleAutoComplete.propTypes = {
 	types: PropTypes.arrayOf(PropTypes.string),
 	componentRestrictions: PropTypes.object,
 	bounds: PropTypes.object,
-	fields: PropTypes.array,
+    fields: PropTypes.array,
+    showMap: PropTypes.bool,
 	inputAutocompleteValue: PropTypes.string,
 	options: PropTypes.shape({
 		componentRestrictions: PropTypes.object,
