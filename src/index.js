@@ -3,12 +3,7 @@ import PropTypes from 'prop-types';
 import { GoogleURl } from './constants.js';
 let autocomplete;
 let googleListner;
-
-const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) => {
-	const currentRef = useRef(null);
-
-	const loadScript = () => {
-		const { apiKey } = props;
+export const configKey = (apiKey) => {
         const googleMapsScriptUrl = GoogleURl(apiKey);
 		if (
 			document.querySelectorAll(`script[src="${googleMapsScriptUrl}"]`).length >
@@ -23,6 +18,13 @@ const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) =
 		return new Promise((resolve) => {
 			googleMapsScript.addEventListener('load', () => resolve());
 		});
+	};
+const GoogleAutoComplete = ({ onChange, onAddressSelected, value, ...props, }) => {
+	const currentRef = useRef(null);
+
+	const loadScript = () => {
+		const { apiKey } = props;
+        return configKey(apiKey);
 	};
 
 	useEffect(() => {
