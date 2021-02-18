@@ -5,11 +5,11 @@ export const ViewGoogleMap = React.memo(
 	({ lat, lng, zoom = 13, className = '' }) => {
 		const mapRef = useRef(null);
 		useEffect(() => {
-			const { google } = window;
-			if (!google) {
-				return alert('google not define');
-			}
 			const initMap = () => {
+				const { google } = window;
+				if (!google) {
+					return alert('google not define');
+				}
 				const mapDiv = mapRef.current;
 				new google.maps.Map(mapDiv, {
 					center: { lat, lng },
